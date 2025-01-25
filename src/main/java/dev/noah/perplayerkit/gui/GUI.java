@@ -226,24 +226,24 @@ public class GUI {
         }
 
         // Buttons
-        setButtonFromConfig(menu, config, "kit_room");
-        setButtonFromConfig(menu, config, "premade_kits");
-        setButtonFromConfig(menu, config, "info");
-        setButtonFromConfig(menu, config, "clear_inventory");
-        setButtonFromConfig(menu, config, "share_kits");
-        setButtonFromConfig(menu, config, "repair_items");
+        button(menu, config, "kit_room");
+        button(menu, config, "premade_kits");
+        button(menu, config, "info");
+        button(menu, config, "clear_inventory");
+        button(menu, config, "share_kits");
+        button(menu, config, "repair_items");
 
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
         menu.open(p);
     }
 
-    private void setButtonFromConfig(Menu menu, ConfigurationSection config, String key) {
+    private void button(Menu menu, ConfigurationSection config, String key) {
         ConfigurationSection section = config.getConfigurationSection(key);
         if (section == null || !section.getBoolean("enabled", true)) {
             return;
         }
         ItemStack buttonItem = ItemParser.parse(section);
-        int slot = section.getInt("slot");
+        int slot = section.getInt("slots");
         menu.getSlot(slot).setItem(buttonItem);
 
         switch (key) {
