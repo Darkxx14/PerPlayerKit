@@ -1,0 +1,66 @@
+kit_menu:
+  title: "%player%'s Kits"
+  filter:
+    material: "BLUE_STAINED_GLASS_PANE"
+    name: " "
+    slots: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53]
+
+  kits:
+    material: chest
+    name: "&3&lKit %kit%"
+    lore:
+      - "&7● Left click to load kit"
+      - "&7● Right click to edit kit"
+    slots: [9, 10, 11, 12, 13, 14, 15, 16, 17]
+
+  ender_chests:
+    material: ender chest
+    name: "&3&lEnder Chest %ec%"
+    lore:
+      - "&7● Left click to load kit"
+      - "&7● Right click to edit kit"
+    slots: [18, 19, 20, 21, 22, 23, 24, 25, 26]
+
+  kit_room:
+    enabled: true
+    material: nether star
+    name: "&a&lKIT ROOM"
+    slot: 37
+
+  premade_kits:
+    enabled: true
+    material: bookshelf
+    name: "&e&lPREMADE KITS"
+    slot: 38
+
+  info:
+    enabled: true
+    material: oak sign
+    name: "&a&lINFO"
+    slot: 39
+    lore:
+      - "&7● Click a kit slot to load your kit"
+      - "&7● Right click or click the book to edit"
+      - "&7● Share kits with /sharekit <slot>"
+
+  clear_inventory:
+    enabled: true
+    material: redstone block
+    name: "&c&lCLEAR INVENTORY"
+    slot: 41
+    lore:
+      - "&7● Shift click"
+
+  share_kits:
+    enabled: true
+    material: compass
+    name: "&a&lSHARE KITS"
+    slot: 42
+    lore:
+      - "&7● /sharekit <slot>"
+
+  repair_items:
+    enabled: true
+    material: experience bottle
+    name: "&a&lREPAIR ITEMS"
+    slot: 43

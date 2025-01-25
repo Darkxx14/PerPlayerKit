@@ -23,6 +23,7 @@ import dev.noah.perplayerkit.commands.extracommands.HealCommand;
 import dev.noah.perplayerkit.commands.extracommands.RepairCommand;
 import dev.noah.perplayerkit.commands.tabcompleters.ECSlotTabCompleter;
 import dev.noah.perplayerkit.commands.tabcompleters.KitSlotTabCompleter;
+import dev.noah.perplayerkit.gui.config.MenuConfig;
 import dev.noah.perplayerkit.listeners.*;
 import dev.noah.perplayerkit.listeners.antiexploit.CommandListener;
 import dev.noah.perplayerkit.listeners.antiexploit.ShulkerDropItemsListener;
@@ -60,6 +61,7 @@ public final class PerPlayerKit extends JavaPlugin {
         plugin = this;
         ConfigManager configManager = new ConfigManager(this);
         configManager.loadConfig();
+        MenuConfig.of(this);
 
         new ItemFilter(this);
         new BroadcastManager(this);
