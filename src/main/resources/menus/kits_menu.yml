@@ -1,5 +1,7 @@
 kit_menu:
   title: "%player%'s Kits"
+  rows: 6
+
   filter:
     material: blue stained glass pane
     name: " "
