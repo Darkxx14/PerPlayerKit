@@ -1,5 +1,5 @@
 kit_menu:
-  title: "%player%'s Kits"
+  title: "<player>'s Kits"
   rows: 6
 
   filter:
@@ -13,7 +13,7 @@ kit_menu:
 
   kits:
     material: chest
-    name: "<green><bold>Kit %kit%"
+    name: "<green><bold>Kit <kit>"
     slots: [ 9, 10, 11, 12, 13, 14, 15, 16, 17 ]
     lore:
       - "<gray>● Left click to load kit"
@@ -21,11 +21,24 @@ kit_menu:
 
   ender_chests:
     material: ender chest
-    name: "<green><bold>Ender Chest %ec%"
+    name: "<green><bold>Ender Chest <ec>"
     slots: [ 18, 19, 20, 21, 22, 23, 24, 25, 26 ]
     lore:
       - "<gray>● Left click to load kit"
       - "<gray>● Right click to edit kit"
+
+  kit_exists:
+    slots: [ 27, 28, 29, 30, 31, 32, 33, 34, 35 ]
+    exists:
+      material: knowledge book
+      name: "<green><bold>KIT EXISTS"
+      lore:
+        - "<gray>● Click to edit"
+    not_found:
+      material: book
+      name: "<red><bold>KIT NOT FOUND"
+      lore:
+        - "<gray>● Click to create"
 
   kit_room:
     enabled: true

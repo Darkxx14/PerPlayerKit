@@ -38,6 +38,7 @@ import org.ipvp.canvas.type.ChestMenu;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -195,34 +196,53 @@ public class GUI {
         Menu menu = createMainMenu(p);
         ConfigurationSection config = KITS_MENU_CONFIG.getConfig().getConfigurationSection("kit_menu");
 
+        if (config == null) throw new IllegalStateException("Configuration section 'kit_menu' not found in kit_menu.yml");
+
         // Filter
-	    assert config != null;
-	    ConfigurationSection filterSection = config.getConfigurationSection("filter");
-	    assert filterSection != null;
-	    List<Integer> filterSlots = filterSection.getIntegerList("slots");
-        ItemStack filterItem = ItemParser.parse(filterSection);
-        for (int i : filterSlots) {
-            menu.getSlot(i).setItem(filterItem);
+        ConfigurationSection filterSection = config.getConfigurationSection("filter");
+        if (filterSection != null) {
+            List<Integer> filterSlots = filterSection.getIntegerList("slots");
+            ItemStack filterItem = ItemParser.parse(filterSection, null);
+            for (int i : filterSlots) menu.getSlot(i).setItem(filterItem);
         }
 
         // Kits
         ConfigurationSection kitsSection = config.getConfigurationSection("kits");
-	    assert kitsSection != null;
-	    List<Integer> kitSlots = kitsSection.getIntegerList("slots");
-        ItemStack kitItem = ItemParser.parse(kitsSection);
-        for (int i : kitSlots) {
-            menu.getSlot(i).setItem(kitItem);
-            addEditLoad(menu.getSlot(i), i - 8);
+        if (kitsSection != null) {
+            List<Integer> kitSlots = kitsSection.getIntegerList("slots");
+            for (int i : kitSlots) {
+                ItemStack kitItem = ItemParser.parse(kitsSection, Map.of("<kit>", String.valueOf(i - 8)));
+                menu.getSlot(i).setItem(kitItem);
+                addEditLoad(menu.getSlot(i), i - 8);
+            }
         }
 
         // Ender chest
         ConfigurationSection ecSection = config.getConfigurationSection("ender_chests");
-	    assert ecSection != null;
-	    List<Integer> ecSlots = ecSection.getIntegerList("slots");
-        ItemStack ecItem = ItemParser.parse(ecSection);
-        for (int i : ecSlots) {
-            menu.getSlot(i).setItem(ecItem);
-            addEditLoadEC(menu.getSlot(i), i - 17);
+        if (ecSection != null) {
+            List<Integer> ecSlots = ecSection.getIntegerList("slots");
+            for (int i : ecSlots) {
+                ItemStack ecItem = ItemParser.parse(ecSection, Map.of("<ec>", String.valueOf(i - 17)));
+                menu.getSlot(i).setItem(ecItem);
+                addEditLoadEC(menu.getSlot(i), i - 17);
+            }
+        }
+
+        // Kit Exists
+        ConfigurationSection customKitSection = config.getConfigurationSection("kit_exists");
+        if (customKitSection != null) {
+            List<Integer> customKitSlots = customKitSection.getIntegerList("slots");
+            ItemStack kitExistsItem = ItemParser.parse(customKitSection.getConfigurationSection("exists"), null);
+            ItemStack kitNotFoundItem = ItemParser.parse(customKitSection.getConfigurationSection("not_found"), null);
+            for (int i = 0; i < customKitSlots.size(); i++) {
+                int slot = customKitSlots.get(i);
+                if (KitManager.get().getItemStackArrayById(p.getUniqueId().toString() + (i + 1)) != null) {
+                    menu.getSlot(slot).setItem(kitExistsItem);
+                } else {
+                    menu.getSlot(slot).setItem(kitNotFoundItem);
+                }
+                addEdit(menu.getSlot(slot), i + 1);
+            }
         }
 
         // Buttons
@@ -237,28 +257,31 @@ public class GUI {
         menu.open(p);
     }
 
-    private void button(Menu menu, ConfigurationSection config, String key) {
+    private void button(Menu menu, @NotNull ConfigurationSection config, String key) {
         ConfigurationSection section = config.getConfigurationSection(key);
         if (section == null || !section.getBoolean("enabled", true)) {
             return;
         }
-        ItemStack buttonItem = ItemParser.parse(section);
-        int slot = section.getInt("slots");
-        menu.getSlot(slot).setItem(buttonItem);
+        ItemStack buttonItem = ItemParser.parse(section, null);
+        List<Integer> slots = section.getIntegerList("slots");
 
-        switch (key) {
-            case "kit_room":
-                addKitRoom(menu.getSlot(slot));
-                break;
-            case "premade_kits":
-                addPublicKitMenu(menu.getSlot(slot));
-                break;
-            case "clear_inventory":
-                addClearButton(menu.getSlot(slot));
-                break;
-            case "repair_items":
-                addRepairButton(menu.getSlot(slot));
-                break;
+        for (int slot : slots) {
+            menu.getSlot(slot).setItem(buttonItem);
+
+            switch (key) {
+                case "kit_room":
+                    addKitRoom(menu.getSlot(slot));
+                    break;
+                case "premade_kits":
+                    addPublicKitMenu(menu.getSlot(slot));
+                    break;
+                case "clear_inventory":
+                    addClearButton(menu.getSlot(slot));
+                    break;
+                case "repair_items":
+                    addRepairButton(menu.getSlot(slot));
+                    break;
+            }
         }
     }
 
@@ -595,7 +618,7 @@ public class GUI {
     }
 
     public Menu createMainMenu(@NotNull Player p) {
-        String title = Objects.requireNonNull(KITS_MENU_CONFIG.getConfig().getString("kit_menu.title")).replace("%player%", p.getName());
+        String title = Objects.requireNonNull(KITS_MENU_CONFIG.getConfig().getString("kit_menu.title")).replace("<player>", p.getName());
         return ChestMenu.builder(KITS_MENU_CONFIG.getConfig().getInt("kit_menu.rows"))
                 .title(title)
                 .build();

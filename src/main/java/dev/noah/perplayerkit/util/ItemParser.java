@@ -1,6 +1,7 @@
 package dev.noah.perplayerkit.util;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -12,13 +13,14 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ItemParser {
 
-	@Contract("null -> fail")
+	@Contract("null, _ -> fail")
 	@SuppressWarnings("deprecation")
-	public static @NotNull ItemStack parse(ConfigurationSection section) {
+	public static @NotNull ItemStack parse(ConfigurationSection section, Map<String, String> placeholders) {
 		if (section == null) {
 			throw new IllegalArgumentException("Configuration section cannot be null");
 		}
@@ -34,15 +36,20 @@ public class ItemParser {
 		ItemMeta meta = itemStack.getItemMeta();
 		if (meta == null) return itemStack;
 
+		MiniMessage mm = MiniMessage.miniMessage();
+
 		if (section.contains("name")) {
-			meta.displayName(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(section.getString("name"))));
+			String name = placeholders(section.getString("name"), placeholders);
+			meta.displayName(mm.deserialize(name).decoration(TextDecoration.ITALIC, false));
 		}
 
 		if (section.contains("lore")) {
-			List<String> loreStrings = section.getStringList("lore");
-			List<Component> lore = loreStrings.stream()
-					.map(line -> MiniMessage.miniMessage().deserialize(line))
+			List<String> loreStrings = section.getStringList("lore").stream()
+					.map(line -> placeholders(line, placeholders))
 					.toList();
+			List<Component> lore = loreStrings.stream()
+					.map(line -> mm.deserialize(line).decoration(TextDecoration.ITALIC, false))
+					.collect(Collectors.toList());
 			meta.lore(lore);
 		}
 
@@ -67,5 +74,14 @@ public class ItemParser {
 
 		itemStack.setItemMeta(meta);
 		return itemStack;
+	}
+
+	private static String placeholders(String text, Map<String, String> placeholders) {
+		if (placeholders == null) return text;
+		if (text == null) return "";
+		for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+			text = text.replace(entry.getKey(), entry.getValue());
+		}
+		return text;
 	}
 }
