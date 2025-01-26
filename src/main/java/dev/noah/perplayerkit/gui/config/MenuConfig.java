@@ -23,5 +23,6 @@ public class MenuConfig {
 
 	public static void of(JavaPlugin plugin) {
 		new MenuConfig(plugin, "menus/kits_menu.yml");
+		new MenuConfig(plugin, "menus/kit_editor_menu.yml");
 	}
 }

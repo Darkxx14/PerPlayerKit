@@ -51,6 +51,7 @@ public class GUI {
 
     // Menu configs
     private static final MenuConfig KITS_MENU_CONFIG = new MenuConfig(PerPlayerKit.getProvidingPlugin(PerPlayerKit.class), "menus/kits_menu.yml");
+    private static final MenuConfig KITS_EDITOR_MENU_CONFIG = new MenuConfig(PerPlayerKit.getProvidingPlugin(PerPlayerKit.class), "menus/kit_editor_menu.yml");
 
 
     public GUI(Plugin plugin) {
@@ -68,9 +69,12 @@ public class GUI {
 
     public void OpenKitMenu(Player p, int slot) {
         Menu menu = createKitMenu(slot);
+        ConfigurationSection config = KITS_EDITOR_MENU_CONFIG.getConfig().getConfigurationSection("kit_editor_menu");
 
+        if (config == null) throw new IllegalStateException("Configuration section 'kit_editor_menu' not found in kit_editor_menu.yml");
+
+        // Kit Items
         if (KitManager.get().getItemStackArrayById(p.getUniqueId().toString() + slot) != null) {
-
             ItemStack[] kit = KitManager.get().getItemStackArrayById(p.getUniqueId().toString() + slot);
             for (int i = 0; i < 41; i++) {
                 menu.getSlot(i).setItem(kit[i]);
@@ -79,26 +83,33 @@ public class GUI {
         for (int i = 0; i < 41; i++) {
             allowModification(menu.getSlot(i));
         }
-        for (int i = 41; i < 54; i++) {
-            menu.getSlot(i).setItem(ItemUtil.createItem(Material.BLUE_STAINED_GLASS_PANE, 1, " "));
 
+        // Filter
+        ConfigurationSection filterSection = config.getConfigurationSection("filter");
+        if (filterSection != null) {
+            List<Integer> filterSlots = filterSection.getIntegerList("slots");
+            ItemStack filterItem = ItemParser.parse(filterSection, null);
+            for (int i : filterSlots) menu.getSlot(i).setItem(filterItem);
         }
-        menu.getSlot(45).setItem(createItem(Material.CHAINMAIL_BOOTS, 1, "&7&lBOOTS"));
-        menu.getSlot(46).setItem(createItem(Material.CHAINMAIL_LEGGINGS, 1, "&7&lLEGGINGS"));
-        menu.getSlot(47).setItem(createItem(Material.CHAINMAIL_CHESTPLATE, 1, "&7&lCHESTPLATE"));
-        menu.getSlot(48).setItem(createItem(Material.CHAINMAIL_HELMET, 1, "&7&lHELMET"));
-        menu.getSlot(49).setItem(createItem(Material.SHIELD, 1, "&7&lOFFHAND"));
 
-        menu.getSlot(51).setItem(createItem(Material.CHEST, 1, "&a&lIMPORT", "&7● Import from inventory"));
-        menu.getSlot(52).setItem(createItem(Material.BARRIER, 1, "&c&lCLEAR KIT", "&7● Shift click to clear"));
-        menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lBACK"));
-        addMainButton(menu.getSlot(53));
-        addClear(menu.getSlot(52));
-        addImport(menu.getSlot(51));
+        // Armor Items
+        String[] armorTypes = {"helmet", "chestplate", "leggings", "boots", "off_hand"};
+        for (String armorType : armorTypes) {
+            ConfigurationSection armorSection = config.getConfigurationSection(armorType);
+            if (armorSection != null) {
+                List<Integer> armorSlots = armorSection.getIntegerList("slots");
+                ItemStack armorItem = ItemParser.parse(armorSection, null);
+                for (int i : armorSlots) menu.getSlot(i).setItem(armorItem);
+            }
+        }
+
+        // Buttons
+        button(menu, config, "import");
+        button(menu, config, "clear_kit");
+        button(menu, config, "back");
+
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
-
         menu.open(p);
-
     }
 
     public void OpenPublicKitEditor(Player p, String kitId) {
@@ -127,13 +138,9 @@ public class GUI {
         menu.getSlot(51).setItem(createItem(Material.CHEST, 1, "&a&lIMPORT", "&7● Import from inventory"));
         menu.getSlot(52).setItem(createItem(Material.BARRIER, 1, "&c&lCLEAR KIT", "&7● Shift click to clear"));
         menu.getSlot(53).setItem(createItem(Material.OAK_DOOR, 1, "&c&lBACK"));
-        addMainButton(menu.getSlot(53));
-        addClear(menu.getSlot(52));
-        addImport(menu.getSlot(51));
+
         menu.setCursorDropHandler(Menu.ALLOW_CURSOR_DROPPING);
-
         menu.open(p);
-
     }
 
     public void OpenECKitKenu(Player p, int slot) {
@@ -280,6 +287,12 @@ public class GUI {
                     break;
                 case "repair_items":
                     addRepairButton(menu.getSlot(slot));
+                case "import":
+                    addImport(menu.getSlot(slot));
+                case "clear_kit":
+                    addClear(menu.getSlot(slot));
+                case "back":
+                    addMainButton(menu.getSlot(slot));
                     break;
             }
         }
@@ -602,7 +615,10 @@ public class GUI {
     }
 
     public Menu createKitMenu(int slot) {
-        return ChestMenu.builder(6).title(ChatColor.BLUE + "Kit: " + slot).build();
+        String title = Objects.requireNonNull(KITS_EDITOR_MENU_CONFIG.getConfig().getString("kit_editor_menu.title")).replace("<kit>", String.valueOf(slot));
+        return ChestMenu.builder(KITS_EDITOR_MENU_CONFIG.getConfig().getInt("kit_editor_menu.rows"))
+                .title(title)
+                .build();
     }
 
     public Menu createPublicKitMenu(String id) {

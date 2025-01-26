@@ -1,0 +1,57 @@
+kit_editor_menu:
+  title: "Kit: <kit>"
+  rows: 6
+
+  filter:
+    material: blue stained glass pane
+    name: " "
+    slots: [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53]
+
+  helmet:
+    material: chainmail helmet
+    name: "<gray><bold>HELMET"
+    slots: [48]
+
+  chestplate:
+    material: chainmail chestplate
+    name: "<gray><bold>CHESTPLATE"
+    slots: [47]
+
+  leggings:
+    material: chainmail leggings
+    name: "<gray><bold>LEGGINGS"
+    slots: [46]
+
+  boots:
+    material: chainmail boots
+    name: "<gray><bold>BOOTS"
+    slots: [45]
+
+  off_hand:
+    material: shield
+    name: "<gray><bold>OFFHAND"
+    slots: [49]
+
+  import:
+    enabled: true
+    material: chest
+    name: "<green><bold>IMPORT"
+    slots: [51]
+    lore:
+      - "<gray>● Import from inventory"
+
+  clear_kit:
+    enabled: true
+    material: barrier
+    name: "<red><bold>CLEAR KIT"
+    slots: [52]
+    lore:
+      - "<gray>● Shift click to clear"
+
+  back:
+    enabled: true
+    material: oak door
+    name: "<gray><bold>BACK"
+    slots: [53]
+    lore:
+      - "<gray>● Go back to the previous menu"
