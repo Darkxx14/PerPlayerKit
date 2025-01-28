@@ -36,6 +36,8 @@
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>dev.noah</shadedPattern>
+                            <pattern>com.github.Anon8281.universalScheduler</pattern>
+                            <shadedPattern>dev.noah.perplayerkit.lib.folia</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -168,6 +170,12 @@
             <artifactId>lombok</artifactId>
             <version>1.18.30</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Anon8281</groupId>
+            <artifactId>UniversalScheduler</artifactId>
+            <version>0.1.6</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

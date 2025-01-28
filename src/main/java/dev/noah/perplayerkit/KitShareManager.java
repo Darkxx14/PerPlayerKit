@@ -18,13 +18,13 @@
  */
 package dev.noah.perplayerkit;
 
+import com.github.Anon8281.universalScheduler.UniversalRunnable;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,7 +82,7 @@ public class KitShareManager {
                 p.sendMessage(ChatColor.GREEN + "Code expires in 15 minutes");
 
 
-                new BukkitRunnable() {
+                new UniversalRunnable() {
 
                     @Override
                     public void run() {
@@ -114,7 +114,7 @@ public class KitShareManager {
                 p.sendMessage(ChatColor.GREEN + "Code expires in 15 minutes");
 
 
-                new BukkitRunnable() {
+                new UniversalRunnable() {
 
                     @Override
                     public void run() {

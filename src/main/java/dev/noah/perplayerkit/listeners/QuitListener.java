@@ -18,6 +18,7 @@
  */
 package dev.noah.perplayerkit.listeners;
 
+import com.github.Anon8281.universalScheduler.UniversalRunnable;
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.PerPlayerKit;
 import org.bukkit.Bukkit;
@@ -30,11 +31,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
 
-
 public class QuitListener implements Listener {
 
-
     private Plugin plugin;
+
     public QuitListener(Plugin plugin) {
         this.plugin = plugin;
     }
@@ -44,21 +44,15 @@ public class QuitListener implements Listener {
         Player player = e.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        new BukkitRunnable() {
-
+        new UniversalRunnable() {
             @Override
             public void run() {
                 KitManager.get().savePlayerKitsToDB(uuid);
             }
-
         }.runTaskAsynchronously(plugin);
 
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        PerPlayerKit.getScheduler().runTaskAsynchronously(() -> {
             KitManager.get().savePlayerKitsToDB(uuid);
         });
-
-
     }
-
-
 }

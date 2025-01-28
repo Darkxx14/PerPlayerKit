@@ -18,6 +18,7 @@
  */
 package dev.noah.perplayerkit.commands;
 
+import com.github.Anon8281.universalScheduler.UniversalRunnable;
 import dev.noah.perplayerkit.KitManager;
 import dev.noah.perplayerkit.PerPlayerKit;
 import dev.noah.perplayerkit.gui.GUI;
@@ -27,7 +28,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -48,7 +48,7 @@ public class InspectKitCommand implements CommandExecutor {
                     UUID target = UUID.fromString(args[0]);
                     if (Bukkit.getPlayer(target) == null) {
 
-                        new BukkitRunnable() {
+                        new UniversalRunnable() {
 
                             @Override
                             public void run() {
@@ -58,7 +58,7 @@ public class InspectKitCommand implements CommandExecutor {
                         }.runTaskAsynchronously(plugin);
 
                     }
-                    new BukkitRunnable() {
+                    new UniversalRunnable() {
 
                         @Override
                         public void run() {

@@ -18,6 +18,7 @@
  */
 package dev.noah.perplayerkit.util;
 
+import dev.noah.perplayerkit.PerPlayerKit;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
@@ -146,7 +147,7 @@ public class BroadcastManager {
         int[] index = {0};
 
         if (plugin.getConfig().getBoolean("scheduled-broadcast.enabled")) {
-            Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            PerPlayerKit.getScheduler().runTaskTimer(() -> {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     audience.player(player).sendMessage(messages.get(index[0]));
                 }

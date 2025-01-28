@@ -18,7 +18,9 @@
  */
 package dev.noah.perplayerkit.listeners;
 
+import com.github.Anon8281.universalScheduler.UniversalRunnable;
 import dev.noah.perplayerkit.KitManager;
+import dev.noah.perplayerkit.PerPlayerKit;
 import dev.noah.perplayerkit.UpdateChecker;
 import dev.noah.perplayerkit.util.BroadcastManager;
 import net.kyori.adventure.text.Component;
@@ -58,15 +60,12 @@ public class JoinListener implements Listener {
 
         //  KitManager.loadFromSQL(uuid);
 
-        new BukkitRunnable() {
-
+        new UniversalRunnable() {
             @Override
             public void run() {
                 KitManager.get().loadPlayerDataFromDB(uuid);
             }
-
         }.runTaskAsynchronously(plugin);
-
 
         // Check if MOTD is enabled and send MOTD messages
         if (plugin.getConfig().getBoolean("motd.enabled")) {
@@ -74,11 +73,9 @@ public class JoinListener implements Listener {
             plugin.getConfig().getStringList("motd.message").forEach(message -> motdMessages.add(MiniMessage.miniMessage().deserialize(message)));
 
             // Delay for sending the MOTD
-            Bukkit.getScheduler().runTaskLater(plugin, () -> motdMessages.forEach(message -> BroadcastManager.get().sendComponentMessage(player,message)), plugin.getConfig().getLong("motd.delay") * 20L);
+            PerPlayerKit.getScheduler().runTaskLater(() -> motdMessages.forEach(message -> BroadcastManager.get().sendComponentMessage(player,message)), plugin.getConfig().getLong("motd.delay") * 20L);
         }
     }
-
-
 }
 
 

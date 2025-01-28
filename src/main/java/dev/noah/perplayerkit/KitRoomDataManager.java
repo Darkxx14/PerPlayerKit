@@ -18,13 +18,13 @@
  */
 package dev.noah.perplayerkit;
 
+import com.github.Anon8281.universalScheduler.UniversalRunnable;
 import dev.noah.perplayerkit.gui.ItemUtil;
 import dev.noah.perplayerkit.util.IDUtil;
 import dev.noah.perplayerkit.util.Serializer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public class KitRoomDataManager {
     }
 
     public void saveToDBAsync() {
-        new BukkitRunnable() {
+        new UniversalRunnable() {
 
             @Override
             public void run() {

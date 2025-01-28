@@ -115,7 +115,7 @@ public class KitManager {
                     kitByKitIDMap.put(IDUtil.getPlayerKitId(uuid, slot), kit);
                     player.sendMessage(ChatColor.GREEN + "Kit " + slot + " saved!");
 
-                    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> savePlayerKitToDB(uuid, slot));
+                    PerPlayerKit.getScheduler().runTaskAsynchronously(() -> savePlayerKitToDB(uuid, slot));
                     return true;
                 } else {
                     player.sendMessage(ChatColor.RED + "You cant save an empty kit!");
@@ -169,7 +169,7 @@ public class KitManager {
             kitByKitIDMap.put(IDUtil.getPublicKitId(publickit), kit);
             player.sendMessage(ChatColor.GREEN + "Public Kit " + publickit + " saved!");
 
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> savePublicKitToDB(publickit));
+            PerPlayerKit.getScheduler().runTaskAsynchronously(() -> savePublicKitToDB(publickit));
             return true;
         } else {
             player.sendMessage(ChatColor.RED + "You cant save an empty kit!");
@@ -242,7 +242,7 @@ public class KitManager {
                     kitByKitIDMap.put(IDUtil.getECId(uuid, slot), kit);
                     player.sendMessage(ChatColor.GREEN + "Enderchest " + slot + " saved!");
 
-                    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> saveEnderchestToDB(uuid, slot));
+                    PerPlayerKit.getScheduler().runTaskAsynchronously(() -> saveEnderchestToDB(uuid, slot));
                     return true;
                 } else {
                     player.sendMessage(ChatColor.RED + "You cant save an empty enderchest!");
@@ -533,7 +533,7 @@ public class KitManager {
     public boolean deleteKit(UUID uuid, int slot) {
         if (hasKit(uuid, slot)) {
             kitByKitIDMap.remove(IDUtil.getPlayerKitId(uuid, slot));
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> PerPlayerKit.storageManager.deleteKitByID(IDUtil.getPlayerKitId(uuid, slot)));
+            PerPlayerKit.getScheduler().runTaskAsynchronously(() -> PerPlayerKit.storageManager.deleteKitByID(IDUtil.getPlayerKitId(uuid, slot)));
             return true;
         }
         return false;

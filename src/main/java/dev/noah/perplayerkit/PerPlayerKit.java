@@ -18,6 +18,8 @@
  */
 package dev.noah.perplayerkit;
 
+import com.github.Anon8281.universalScheduler.UniversalScheduler;
+import com.github.Anon8281.universalScheduler.scheduling.schedulers.TaskScheduler;
 import dev.noah.perplayerkit.commands.*;
 import dev.noah.perplayerkit.commands.extracommands.HealCommand;
 import dev.noah.perplayerkit.commands.extracommands.RepairCommand;
@@ -46,9 +48,15 @@ public final class PerPlayerKit extends JavaPlugin {
 
     public static Plugin plugin;
     public static StorageManager storageManager;
+    private static TaskScheduler scheduler;
+
 
     public static Plugin getPlugin() {
         return plugin;
+    }
+
+    public static TaskScheduler getScheduler() {
+        return scheduler;
     }
 
     @Override
@@ -59,6 +67,7 @@ public final class PerPlayerKit extends JavaPlugin {
         Metrics metrics = new Metrics(this, bstatsId);
 
         plugin = this;
+        scheduler = UniversalScheduler.getScheduler(this);
         ConfigManager configManager = new ConfigManager(this);
         configManager.loadConfig();
         MenuConfig.of(this);
@@ -100,7 +109,7 @@ public final class PerPlayerKit extends JavaPlugin {
             return;
         }
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
+        getScheduler().runTaskTimerAsynchronously(() -> {
 
             if (storageManager.isConnected()) {
                 try {
